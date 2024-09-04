@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
@@ -28,26 +29,20 @@ public class PlayerEvents implements Listener {
         Block blockUnderPlayer = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
         CtfTeam ctfTeam = playerData.getTeam();
 
-//        System.out.println(String.format(
-//                "%s: Block under is %s, team %s, flag captured %s",
-//                blockUnderPlayer.getType(),
-//                player.getDisplayName(),
-//                ctfTeam.getName(),
-//                playerData.hasEnemyFlag()
-//        ));
-
         if (ctfTeam == null) return;
 
         if (blockUnderPlayer.getType() == ctfTeam.getEnemyTeam().getCaptureBlock() && !ctfTeam.getEnemyTeam().isFlagTaken()){
             Bukkit.broadcastMessage(String.format("%s has captured %s's flag!", player.getDisplayName(), ctfTeam.getEnemyTeam().getName()));
             ctfTeam.getEnemyTeam().setFlagTaken(true);
             playerData.setHasEnemyFlag(true);
+            player.getInventory().setHelmet(new ItemStack(ctfTeam.getEnemyTeam().getBannerBlock()));
         }
 
         if (blockUnderPlayer.getType() == ctfTeam.getCaptureBlock() && playerData.hasEnemyFlag()){
             Bukkit.broadcastMessage(String.format("%s secured %s's flag!", player.getDisplayName(), ctfTeam.getEnemyTeam().getName()));
             ctfTeam.getEnemyTeam().setFlagTaken(false);
             playerData.setHasEnemyFlag(false);
+            player.getInventory().setHelmet(new ItemStack(Material.AIR));
         }
 
     }

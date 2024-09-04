@@ -2,8 +2,12 @@ package com.discord.smpshowdown.cTF.teams;
 
 import com.discord.smpshowdown.cTF.players.PlayerData;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.Banner;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
@@ -13,15 +17,17 @@ public class CtfTeam {
     String name;
     Material captureBlock;
     ChatColor teamColor;
+    Material bannerBlock;
     boolean isFlagTaken;
     Team team;
     CtfTeam enemyTeam;
     List<Player> players;
 
-    public CtfTeam(String name, Material captureBlock, ChatColor teamColor){
+    public CtfTeam(String name, Material captureBlock, ChatColor teamColor, Material bannerBlock){
         this.name = name;
         this.captureBlock = captureBlock;
         this.teamColor = teamColor;
+        this.bannerBlock = bannerBlock;
         this.isFlagTaken = false;
         this.players = new ArrayList<>();
     }
@@ -36,6 +42,10 @@ public class CtfTeam {
 
     public ChatColor getTeamColor() {
         return teamColor;
+    }
+
+    public Material getBannerBlock(){
+        return bannerBlock;
     }
 
     public boolean isFlagTaken() {

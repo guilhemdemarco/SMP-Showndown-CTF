@@ -3,7 +3,10 @@ package com.discord.smpshowdown.cTF.teams;
 import com.discord.smpshowdown.cTF.CTF;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -18,8 +21,8 @@ public class TeamManager {
     private final CTF main;
     public TeamManager(CTF main){
         this.main = main;
-        alphaTeam = new CtfTeam("red", Material.RED_WOOL, ChatColor.RED);
-        deltaTeam = new CtfTeam("blue", Material.BLUE_WOOL, ChatColor.BLUE);
+        alphaTeam = new CtfTeam("red", Material.RED_WOOL, ChatColor.RED, Material.RED_BANNER);
+        deltaTeam = new CtfTeam("blue", Material.BLUE_WOOL, ChatColor.BLUE, Material.BLUE_BANNER);
         alphaTeam.setEnemyTeam(deltaTeam);
         deltaTeam.setEnemyTeam(alphaTeam);
     }
