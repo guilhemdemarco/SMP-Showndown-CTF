@@ -9,14 +9,29 @@ import java.util.UUID;
 public class PlayerData {
 
     UUID uuid;
+    Player player;
     boolean hasEnemyFlag;
     CtfTeam team;
+
+    public PlayerData(Player player){
+        this.uuid = player.getUniqueId();
+        this.player = player;
+        this.hasEnemyFlag = false;
+    }
 
     public UUID getUuid() {
         return uuid;
     }
 
-    public boolean isHasEnemyFlag() {
+    public Player getPlayer(){
+        return player;
+    }
+
+    public void setHasEnemyFlag(boolean hasEnemyFlag) {
+        this.hasEnemyFlag = hasEnemyFlag;
+    }
+
+    public boolean hasEnemyFlag() {
         return hasEnemyFlag;
     }
 
@@ -26,10 +41,5 @@ public class PlayerData {
 
     public void setTeam(CtfTeam team) {
         this.team = team;
-    }
-
-    public PlayerData(Player player){
-        this.uuid = player.getUniqueId();
-        this.hasEnemyFlag = false;
     }
 }

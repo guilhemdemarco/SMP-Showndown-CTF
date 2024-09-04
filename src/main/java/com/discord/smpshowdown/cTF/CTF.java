@@ -28,6 +28,15 @@ public final class CTF extends JavaPlugin {
         teamManager = new TeamManager(this);
         teamManager.createTeamsOnStartup();
 
+        //DEBUG: this is for when we reload the plugin, the playerdata hashmap gets reset
+        // so when testing commands, you need to rejoin every reload, otherwise you get an error
+        //TODO: data persistence
+
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            playerData.putIfAbsent(player.getUniqueId(), new PlayerData(player));
+            System.out.println(String.format("DEBUG: created playerdata of %s", player.getDisplayName()));
+        });
+
     }
 
     @Override
@@ -49,13 +58,19 @@ public final class CTF extends JavaPlugin {
                     if (args[3].equals(teamManager.getAlphaTeam().getName())){
                         System.out.println("Joining team alpha: " + player.getDisplayName());
                         sender.sendMessage(String.format("Switching %s's team to %s", player.getDisplayName(), teamManager.getAlphaTeam().getName()));
+                        player.sendMessage("You've joined team " + teamManager.getAlphaTeam().getName());
                         playerData.get(player.getUniqueId()).setTeam(teamManager.getAlphaTeam());
+                        teamManager.getAlphaTeam().addPlayer(player);
+                        teamManager.getDeltaTeam().removePlayer(player);
                         return true;
                     }
                     else if (args[3].equals(teamManager.getDeltaTeam().getName())){
                         System.out.println("Joining team delta: " + player.getDisplayName());
                         sender.sendMessage(String.format("Switching %s's team to %s", player.getDisplayName(), teamManager.getDeltaTeam().getName()));
+                        player.sendMessage("You've joined team " + teamManager.getDeltaTeam().getName());
                         playerData.get(player.getUniqueId()).setTeam(teamManager.getDeltaTeam());
+                        teamManager.getDeltaTeam().addPlayer(player);
+                        teamManager.getAlphaTeam().removePlayer(player);
                         return true;
                     }
                     else {
