@@ -1,13 +1,11 @@
 package com.discord.smpshowdown.cTF.teams;
 
-import com.discord.smpshowdown.cTF.players.PlayerData;
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.block.Banner;
-import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ public class CtfTeam {
     String name;
     Material captureBlock;
     ChatColor teamColor;
-    Material bannerBlock;
+    ItemStack banner;
     boolean isFlagTaken;
     Team team;
     CtfTeam enemyTeam;
@@ -27,7 +25,12 @@ public class CtfTeam {
         this.name = name;
         this.captureBlock = captureBlock;
         this.teamColor = teamColor;
-        this.bannerBlock = bannerBlock;
+        ItemStack _tempBanner = new ItemStack(bannerBlock);
+        ItemMeta meta = _tempBanner.getItemMeta();
+        meta.addEnchant(Enchantment.VANISHING_CURSE, 1, true);
+        meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+        _tempBanner.setItemMeta(meta);
+        this.banner = _tempBanner;
         this.isFlagTaken = false;
         this.players = new ArrayList<>();
     }
@@ -44,8 +47,8 @@ public class CtfTeam {
         return teamColor;
     }
 
-    public Material getBannerBlock(){
-        return bannerBlock;
+    public ItemStack getBanner(){
+        return banner;
     }
 
     public boolean isFlagTaken() {

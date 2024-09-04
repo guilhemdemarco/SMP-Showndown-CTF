@@ -8,16 +8,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
 
 public class PlayerEvents implements Listener {
 
@@ -35,7 +32,7 @@ public class PlayerEvents implements Listener {
             Bukkit.broadcastMessage(String.format("%s has captured %s's flag!", player.getDisplayName(), ctfTeam.getEnemyTeam().getName()));
             ctfTeam.getEnemyTeam().setFlagTaken(true);
             playerData.setHasEnemyFlag(true);
-            player.getInventory().setHelmet(new ItemStack(ctfTeam.getEnemyTeam().getBannerBlock()));
+            player.getInventory().setHelmet(new ItemStack(ctfTeam.getEnemyTeam().getBanner()));
         }
 
         if (blockUnderPlayer.getType() == ctfTeam.getCaptureBlock() && playerData.hasEnemyFlag()){
@@ -45,6 +42,17 @@ public class PlayerEvents implements Listener {
             player.getInventory().setHelmet(new ItemStack(Material.AIR));
         }
 
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event){
+        Player deadPlayer = event.getEntity();
+        PlayerData playerData = CTF.playerData.get(deadPlayer.getUniqueId());
+        if (playerData.hasEnemyFlag()){
+            Bukkit.broadcastMessage(String.format("%s has dropped %s's flag!", deadPlayer.getDisplayName(), playerData.getTeam().getEnemyTeam().getName()));
+            playerData.setHasEnemyFlag(false);
+            playerData.getTeam().getEnemyTeam().setFlagTaken(false);
+        }
     }
 
     @EventHandler
