@@ -1,6 +1,6 @@
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java21-alpine
     tty: true
     stdin_open: true
     ports:
@@ -9,6 +9,7 @@ services:
       EULA: "TRUE"
       TYPE: SPIGOT
       VERSION: 1.21
+      MEMORY: 2G
     volumes:
       # attach the relative directory 'data' to the container's /data path
       - ./minecraft-data:/data
