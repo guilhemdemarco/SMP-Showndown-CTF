@@ -1,0 +1,4 @@
+name: CTF
+version: '1.0-SNAPSHOT'
+main: com.discord.smpshowdown.cTF.CTF
+api-version: '1.21'
