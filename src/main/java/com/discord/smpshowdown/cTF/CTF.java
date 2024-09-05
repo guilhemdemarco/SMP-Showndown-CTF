@@ -2,6 +2,7 @@ package com.discord.smpshowdown.cTF;
 
 import com.discord.smpshowdown.cTF.listeners.PlayerEvents;
 import com.discord.smpshowdown.cTF.players.PlayerData;
+import com.discord.smpshowdown.cTF.teams.CtfTeam;
 import com.discord.smpshowdown.cTF.teams.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -77,6 +78,66 @@ public final class CTF extends JavaPlugin {
                         sender.sendMessage(String.format("Team '%s' not found!", args[3]));
                         return true;
                     }
+                } else if (args[1].equalsIgnoreCase("spawn")) {
+                    if (!(sender instanceof Player)){
+                        sender.sendMessage("Cannot set spawn position from the console");
+                        return false;
+                    }
+                    Player player = (Player) sender;
+
+                    if (args[2].equals(teamManager.getAlphaTeam().getName())){
+                        teamManager.getAlphaTeam().setSpawnLocation(player.getLocation());
+                        player.sendMessage(String.format("Set team %s spawn to %d, %d, %d",
+                                teamManager.getAlphaTeam().getName(),
+                                player.getLocation().getBlockX(),player.getLocation().getBlockY(),player.getLocation().getBlockZ()));
+                        return true;
+                    }
+                    else if (args[2].equals(teamManager.getDeltaTeam().getName())){
+                        teamManager.getDeltaTeam().setSpawnLocation(player.getLocation());
+                        player.sendMessage(String.format("Set team %s spawn to %d, %d, %d",
+                                teamManager.getDeltaTeam().getName(),
+                                player.getLocation().getBlockX(),player.getLocation().getBlockY(),player.getLocation().getBlockZ()));
+                        return true;
+                    }
+                    else {
+                        sender.sendMessage(String.format("Team '%s' not found!", args[3]));
+                        return true;
+                    }
+                }
+            } else if (args[0].equalsIgnoreCase("start")) {
+                CtfTeam alphaTeam = teamManager.getAlphaTeam();
+                CtfTeam deltaTeam = teamManager.getDeltaTeam();
+
+                boolean error = false;
+                if (alphaTeam.getSpawnLocation() == null) {
+                    sender.sendMessage(String.format("Team %s's location is not defined", alphaTeam.getName()));
+                    error = true;
+                }
+                if (deltaTeam.getSpawnLocation() == null) {
+                    sender.sendMessage(String.format("Team %s's location is not defined", deltaTeam.getName()));
+                    error = true;
+                }
+                if (alphaTeam.getPlayers().isEmpty()) {
+                    sender.sendMessage(String.format("No players on team %s", alphaTeam.getName()));
+                    error = true;
+                }
+                if (deltaTeam.getPlayers().isEmpty()) {
+                    sender.sendMessage(String.format("No players on team %s", deltaTeam.getName()));
+                    error = true;
+                }
+                if (error) {
+                    sender.sendMessage("Cannot start game!");
+                    sender.sendMessage("[DEBUG] starting game anyways");
+                    //return false;
+                }
+
+                for (Player player : alphaTeam.getPlayers()){
+                    player.setRespawnLocation(alphaTeam.getSpawnLocation());
+                    player.teleport(alphaTeam.getSpawnLocation());
+                }
+                for (Player player : deltaTeam.getPlayers()){
+                    player.setRespawnLocation(deltaTeam.getSpawnLocation());
+                    player.teleport(deltaTeam.getSpawnLocation());
                 }
             }
         }

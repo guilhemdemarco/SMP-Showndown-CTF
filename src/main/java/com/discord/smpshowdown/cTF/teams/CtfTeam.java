@@ -1,6 +1,7 @@
 package com.discord.smpshowdown.cTF.teams;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -20,6 +21,9 @@ public class CtfTeam {
     Team team;
     CtfTeam enemyTeam;
     List<Player> players;
+    Location spawnLocation;
+
+
 
     public CtfTeam(String name, Material captureBlock, ChatColor teamColor, Material bannerBlock){
         this.name = name;
@@ -85,5 +89,13 @@ public class CtfTeam {
 
     public void removePlayer(Player player){
         players.remove(player);
+    }
+
+    public Location getSpawnLocation() {
+        return spawnLocation;
+    }
+
+    public void setSpawnLocation(Location spawnLocation) {
+        this.spawnLocation = spawnLocation;
     }
 }
