@@ -1,5 +1,6 @@
 package com.discord.smpshowdown.cTF.teams;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -84,10 +85,12 @@ public class CtfTeam {
     }
 
     public void addPlayer(Player player) {
+        Bukkit.getScoreboardManager().getMainScoreboard().getTeam(this.name).addPlayer(player);
         players.add(player);
     }
 
     public void removePlayer(Player player){
+        Bukkit.getScoreboardManager().getMainScoreboard().getTeam(this.name).removePlayer(player);
         players.remove(player);
     }
 

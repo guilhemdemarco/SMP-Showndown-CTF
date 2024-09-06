@@ -22,12 +22,15 @@ public final class CTF extends JavaPlugin {
 
     public static HashMap<UUID, PlayerData> playerData = new HashMap<UUID, PlayerData>();
     public static TeamManager teamManager;
+    public static GameManager gameManager;
 
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
         teamManager = new TeamManager(this);
         teamManager.createTeamsOnStartup();
+        gameManager = new GameManager(this);
+
 
         //DEBUG: this is for when we reload the plugin, the playerdata hashmap gets reset
         // so when testing commands, you need to rejoin every reload, otherwise you get an error
@@ -49,6 +52,10 @@ public final class CTF extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         //TODO: this is ugly
         if (label.equalsIgnoreCase("ctf")){
+            if (!sender.isOp()){
+                sender.sendMessage(ChatColor.RED + "You are not allowed to use this command!");
+                return false;
+            }
             if (args[0].equalsIgnoreCase("team")){
                 if (args[1].equalsIgnoreCase("join")){
                     Player player = Bukkit.getPlayer(args[2]);
@@ -105,40 +112,11 @@ public final class CTF extends JavaPlugin {
                     }
                 }
             } else if (args[0].equalsIgnoreCase("start")) {
-                CtfTeam alphaTeam = teamManager.getAlphaTeam();
-                CtfTeam deltaTeam = teamManager.getDeltaTeam();
-
-                boolean error = false;
-                if (alphaTeam.getSpawnLocation() == null) {
-                    sender.sendMessage(String.format("Team %s's location is not defined", alphaTeam.getName()));
-                    error = true;
-                }
-                if (deltaTeam.getSpawnLocation() == null) {
-                    sender.sendMessage(String.format("Team %s's location is not defined", deltaTeam.getName()));
-                    error = true;
-                }
-                if (alphaTeam.getPlayers().isEmpty()) {
-                    sender.sendMessage(String.format("No players on team %s", alphaTeam.getName()));
-                    error = true;
-                }
-                if (deltaTeam.getPlayers().isEmpty()) {
-                    sender.sendMessage(String.format("No players on team %s", deltaTeam.getName()));
-                    error = true;
-                }
-                if (error) {
-                    sender.sendMessage("Cannot start game!");
-                    sender.sendMessage("[DEBUG] starting game anyways");
-                    //return false;
-                }
-
-                for (Player player : alphaTeam.getPlayers()){
-                    player.setRespawnLocation(alphaTeam.getSpawnLocation());
-                    player.teleport(alphaTeam.getSpawnLocation());
-                }
-                for (Player player : deltaTeam.getPlayers()){
-                    player.setRespawnLocation(deltaTeam.getSpawnLocation());
-                    player.teleport(deltaTeam.getSpawnLocation());
-                }
+                return gameManager.startGame(sender);
+            }
+            else if (args[0].equalsIgnoreCase("stop")) {
+                gameManager.setGameState(GameManager.GameState.STOPPED);
+                return true;
             }
         }
 

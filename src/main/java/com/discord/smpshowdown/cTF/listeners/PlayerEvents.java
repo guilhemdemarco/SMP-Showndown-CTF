@@ -1,10 +1,12 @@
 package com.discord.smpshowdown.cTF.listeners;
 
 import com.discord.smpshowdown.cTF.CTF;
+import com.discord.smpshowdown.cTF.GameManager;
 import com.discord.smpshowdown.cTF.players.PlayerData;
 import com.discord.smpshowdown.cTF.teams.CtfTeam;
 import com.discord.smpshowdown.cTF.teams.TeamManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -20,6 +22,11 @@ public class PlayerEvents implements Listener {
 
     @EventHandler
     public void onMoveEvent(PlayerMoveEvent event){
+        if (CTF.gameManager.getGameState() == GameManager.GameState.STARTING){
+            event.setCancelled(true);
+            return;
+        }
+
         TeamManager teamManager = CTF.teamManager;
         Player player = event.getPlayer();
         PlayerData playerData = CTF.playerData.get(player.getUniqueId());
@@ -60,6 +67,7 @@ public class PlayerEvents implements Listener {
         Player player = event.getPlayer();
         PlayerData data = new PlayerData(player);
         CTF.playerData.putIfAbsent(player.getUniqueId(), data);
+        player.sendMessage(ChatColor.DARK_RED + "REMEMBER TO RELOAD!!!!");
         System.out.println("Added player data");
     }
 }

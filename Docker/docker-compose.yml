@@ -10,6 +10,9 @@ services:
       TYPE: SPIGOT
       VERSION: 1.21
       MEMORY: 2G
+      MOTD: Dev server
+      ENABLE_COMMAND_BLOCK: true
+
     volumes:
       # attach the relative directory 'data' to the container's /data path
       - ./minecraft-data:/data
