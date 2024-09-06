@@ -23,6 +23,7 @@ public final class CTF extends JavaPlugin {
     public static HashMap<UUID, PlayerData> playerData = new HashMap<UUID, PlayerData>();
     public static TeamManager teamManager;
     public static GameManager gameManager;
+    public static Bossbar bossbar;
 
     @Override
     public void onEnable() {
@@ -30,6 +31,7 @@ public final class CTF extends JavaPlugin {
         teamManager = new TeamManager(this);
         teamManager.createTeamsOnStartup();
         gameManager = new GameManager(this);
+        bossbar = new Bossbar(this);
 
 
         //DEBUG: this is for when we reload the plugin, the playerdata hashmap gets reset
@@ -39,6 +41,7 @@ public final class CTF extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(player -> {
             playerData.putIfAbsent(player.getUniqueId(), new PlayerData(player));
             System.out.println(String.format("DEBUG: created playerdata of %s", player.getDisplayName()));
+            bossbar.addPlayer(player);
         });
 
     }
@@ -46,6 +49,7 @@ public final class CTF extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        bossbar.getBossbar().removeAll();
     }
 
     @Override
@@ -115,7 +119,8 @@ public final class CTF extends JavaPlugin {
                 return gameManager.startGame(sender);
             }
             else if (args[0].equalsIgnoreCase("stop")) {
-                gameManager.setGameState(GameManager.GameState.STOPPED);
+                Bukkit.broadcastMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Game ended by operator");
+                gameManager.stopGame(null);
                 return true;
             }
         }
