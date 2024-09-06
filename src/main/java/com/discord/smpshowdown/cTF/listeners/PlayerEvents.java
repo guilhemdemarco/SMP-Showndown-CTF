@@ -5,11 +5,10 @@ import com.discord.smpshowdown.cTF.GameManager;
 import com.discord.smpshowdown.cTF.players.PlayerData;
 import com.discord.smpshowdown.cTF.teams.CtfTeam;
 import com.discord.smpshowdown.cTF.teams.TeamManager;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -44,15 +43,18 @@ public class PlayerEvents implements Listener {
         if (!(CTF.gameManager.getGameState() == GameManager.GameState.STARTED)) return;
 
         if (blockUnderPlayer.getType() == ctfTeam.getEnemyTeam().getCaptureBlock() && !ctfTeam.getEnemyTeam().isFlagTaken()){
-            Bukkit.broadcastMessage(ctfTeam.getTeamColor() + ChatColor.BOLD.toString() +
+            String message = ctfTeam.getTeamColor() + ChatColor.BOLD.toString() +
                     String.format("%s has captured %s's flag!",
                             player.getDisplayName(),
-                            ctfTeam.getEnemyTeam().getName()));
+                            ctfTeam.getEnemyTeam().getName());
+            CTF.broadcastActionBarMessage(message);
+            Bukkit.broadcastMessage(message);
             ctfTeam.getEnemyTeam().setFlagTaken(true);
             playerData.setHasEnemyFlag(true);
             player.getInventory().setHelmet(new ItemStack(ctfTeam.getEnemyTeam().getBanner()));
-            sendActionBarMessage(player, ChatColor.WHITE + ChatColor.BOLD.toString() +
+            CTF.sendActionBarMessage(player, ChatColor.WHITE + ChatColor.BOLD.toString() +
                     "YOU HAVE THE ENEMY FLAG!!! CARRY IT BACK TO YOUR BASE");
+            CTF.broadcastSound(Sound.BLOCK_NOTE_BLOCK_BELL, 2);
         }
 
         if (blockUnderPlayer.getType() == ctfTeam.getCaptureBlock() && playerData.hasEnemyFlag()){
@@ -63,7 +65,6 @@ public class PlayerEvents implements Listener {
             ctfTeam.getEnemyTeam().setFlagTaken(false);
             playerData.setHasEnemyFlag(false);
             player.getInventory().setHelmet(new ItemStack(Material.AIR));
-
             CTF.gameManager.stopGame(ctfTeam);
         }
 
@@ -104,7 +105,5 @@ public class PlayerEvents implements Listener {
 
     }
 
-    public void sendActionBarMessage(Player player, String message){
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-    }
+
 }

@@ -4,8 +4,8 @@ import com.discord.smpshowdown.cTF.teams.CtfTeam;
 import com.discord.smpshowdown.cTF.teams.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 public class GameManager {
@@ -80,24 +80,26 @@ public class GameManager {
                 "GAME'S OVER!");
 
         // if there isnt a winning team, that means time ran out, or was stopped by a command, and it's a draw!
+        String message = "";
         if (winner == null){
-            String message = ChatColor.BOLD.toString() + ChatColor.GOLD.toString() +
+            message = ChatColor.BOLD.toString() + ChatColor.GOLD.toString() +
                     "It's a draw! Nobody wins!";
-            CTF.bossbar.updateBossbar(message, 1.0);
-            Bukkit.broadcastMessage(message);
         }
         else {
             timerTask.cancel();
-            String message = ChatColor.BOLD.toString() + winner.getTeamColor() +
+            message = ChatColor.BOLD.toString() + winner.getTeamColor() +
                     String.format("Team %s wins!", winner.getName());
-            CTF.bossbar.updateBossbar(message, 1.0);
-            Bukkit.broadcastMessage(message);
         }
+        CTF.bossbar.updateBossbar(message, 1.0);
+        CTF.broadcastTitleMessage(message, "");
+        Bukkit.broadcastMessage(message);
+        CTF.broadcastSound(Sound.UI_TOAST_CHALLENGE_COMPLETE, 1);
 
         task = Bukkit.getScheduler().runTaskLater(main, () ->{
             setGameState(GameState.STOPPED);
-            Bukkit.broadcastMessage("Game can start again");
+            Bukkit.broadcastMessage(ChatColor.ITALIC.toString() + ChatColor.GRAY + "Game can start again");
             CTF.bossbar.updateBossbar(Bossbar.defaultTitle, 1.0);
+            CTF.broadcastSound(Sound.ENTITY_CHICKEN_EGG, 1);
         }, 20*5);
     }
 
@@ -119,11 +121,17 @@ public class GameManager {
         countdownTask = Bukkit.getScheduler().runTaskTimer(main, () -> {
             if (count == 0) {
                 setGameState(GameState.STARTED);
-                Bukkit.broadcastMessage(ChatColor.AQUA + "GO!");
+                String message = ChatColor.AQUA + "GO!";
+                CTF.broadcastTitleMessage(message, "");
+                Bukkit.broadcastMessage(message);
                 countdownTask.cancel();
+                CTF.broadcastSound(Sound.BLOCK_NOTE_BLOCK_PLING, 2);
                 startGameTimer();
             }else {
-                Bukkit.broadcastMessage(ChatColor.AQUA + String.valueOf(count));
+                String message = ChatColor.AQUA + String.valueOf(count);
+                CTF.broadcastTitleMessage(message, "");
+                Bukkit.broadcastMessage(message);
+                CTF.broadcastSound(Sound.BLOCK_NOTE_BLOCK_PLING, 1);
             }
             count--;
         }, 0, 20);
@@ -135,11 +143,11 @@ public class GameManager {
         Bossbar bossbar = CTF.bossbar;
         timerTask = Bukkit.getScheduler().runTaskTimer(main, () -> {
             if (count == 0) {
-                Bukkit.broadcastMessage("Game ended!");
+//                Bukkit.broadcastMessage("Game ended!");
                 stopGame(null);
                 timerTask.cancel();
             } else {
-                Bukkit.broadcastMessage(ChatColor.AQUA + String.valueOf(count));
+//                Bukkit.broadcastMessage(ChatColor.AQUA + String.valueOf(count));
                 int newcount = count;
                 String barMessage = "";
                 barMessage += " - Time remaining: " + String.format("%02d:%02d", (newcount % 3600) / 60, newcount % 60) + " - ";

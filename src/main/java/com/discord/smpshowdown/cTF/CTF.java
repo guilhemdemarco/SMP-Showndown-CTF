@@ -4,8 +4,11 @@ import com.discord.smpshowdown.cTF.listeners.PlayerEvents;
 import com.discord.smpshowdown.cTF.players.PlayerData;
 import com.discord.smpshowdown.cTF.teams.CtfTeam;
 import com.discord.smpshowdown.cTF.teams.TeamManager;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -127,6 +130,31 @@ public final class CTF extends JavaPlugin {
 
         sender.sendMessage("Incorrect command");
         return false;
+    }
+
+    public static void sendActionBarMessage(Player player, String message){
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+    }
+
+    public static void sendTitleMessage(String title, String subtitle, Player player){
+        player.sendTitle(title, subtitle, 5, 20*3, 5);
+    }
+
+    public static void broadcastTitleMessage(String title, String subtitle){
+        for (Player player : Bukkit.getOnlinePlayers()){
+            sendTitleMessage(title, subtitle, player);
+        }
+    }
+    public static void broadcastActionBarMessage(String message){
+        for (Player player : Bukkit.getOnlinePlayers()){
+            sendActionBarMessage(player, message);
+        }
+    }
+
+    public static void broadcastSound(Sound sound, float pitch){
+        for (Player player : Bukkit.getOnlinePlayers()){
+            player.playSound(player, sound, (float) 1.0, pitch);
+        }
     }
 
 }
