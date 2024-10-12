@@ -148,10 +148,10 @@ public class PlayerEvents implements Listener {
         Player player = event.getPlayer();
         PlayerData data = new PlayerData(player);
         CTF.playerData.putIfAbsent(player.getUniqueId(), data);
-        player.sendMessage(ChatColor.DARK_RED + "REMEMBER TO RELOAD!!!!");
         System.out.println("Added player data");
         CTF.bossbar.addPlayer(player);
 
+        if (CTF.configManager.isDebug()) player.sendMessage(ChatColor.DARK_RED + "REMEMBER TO RELOAD!!!!");
 
     }
 

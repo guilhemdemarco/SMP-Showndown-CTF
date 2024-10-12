@@ -21,3 +21,4 @@ teams:
 flag_retake_time_millis: 5000
 flag_retake_area: 2
 game_duration_seconds: 60
+debug: false

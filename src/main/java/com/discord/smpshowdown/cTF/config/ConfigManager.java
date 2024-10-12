@@ -16,6 +16,7 @@ public class ConfigManager {
     private final long flagRetakeTimeMillis;
     private final int flagRetakeArea;
     private final int gameDuration;
+    private final boolean isDebug;
 
     public ConfigManager(CTF main) {
         this.main = main;
@@ -23,6 +24,7 @@ public class ConfigManager {
         this.flagRetakeTimeMillis = main.getConfig().getLong("flag_retake_time_millis");
         this.flagRetakeArea = main.getConfig().getInt("flag_retake_area");
         this.gameDuration = main.getConfig().getInt("game_duration_seconds");
+        this.isDebug = main.getConfig().getBoolean("debug");
     }
 
     public CtfTeam[] getTeams() {
@@ -39,6 +41,10 @@ public class ConfigManager {
 
     public int getGameDuration() {
         return gameDuration;
+    }
+
+    public boolean isDebug() {
+        return isDebug;
     }
 
     private CtfTeam[] loadTeams(){

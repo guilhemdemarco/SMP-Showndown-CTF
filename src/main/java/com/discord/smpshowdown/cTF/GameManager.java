@@ -38,26 +38,28 @@ public class GameManager {
 
         boolean error = false;
         if (alphaTeam.getSpawnLocation() == null) {
-            sender.sendMessage(String.format("Team %s's location is not defined", alphaTeam.getName()));
+            sender.sendMessage(String.format(ChatColor.RED + "Team %s's spawn location is not defined", alphaTeam.getName()));
             error = true;
         }
         if (deltaTeam.getSpawnLocation() == null) {
-            sender.sendMessage(String.format("Team %s's location is not defined", deltaTeam.getName()));
+            sender.sendMessage(String.format(ChatColor.RED + "Team %s's spawn location is not defined", deltaTeam.getName()));
             error = true;
         }
         if (alphaTeam.getPlayers().isEmpty()) {
-            sender.sendMessage(String.format("No players on team %s", alphaTeam.getName()));
+            sender.sendMessage(String.format(ChatColor.RED + "No players on team %s", alphaTeam.getName()));
             error = true;
         }
         if (deltaTeam.getPlayers().isEmpty()) {
-            sender.sendMessage(String.format("No players on team %s", deltaTeam.getName()));
+            sender.sendMessage(String.format(ChatColor.RED + "No players on team %s", deltaTeam.getName()));
             error = true;
         }
         if (error) {
-            sender.sendMessage("Cannot start game!");
-            sender.sendMessage("[DEBUG] starting game anyways");
-            //setGameState(GameState.STOPPED);
-            //return false;
+            sender.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "Cannot start game!");
+            if (!CTF.configManager.isDebug()){
+                setGameState(GameState.STOPPED);
+                return false;
+            }
+            sender.sendMessage(ChatColor.RED +""+ ChatColor.ITALIC +"[DEBUG] starting game anyways");
         }
 
         for (Player player : alphaTeam.getPlayers()){
