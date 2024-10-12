@@ -1,0 +1,23 @@
+teams:
+  alpha:
+    name: red
+    captureBlock: RED_WOOL
+    bannerBlock: RED_BANNER
+    teamColor: RED
+    spawn:
+      - 56
+      - 71
+      - -12
+
+  delta:
+    name: blue
+    captureBlock: BLUE_WOOL
+    bannerBlock: BLUE_BANNER
+    teamColor: BLUE
+    spawn:
+      - 56
+      - 72
+      - -26
+flag_retake_time_millis: 5000
+flag_retake_area: 2
+game_duration_seconds: 60

@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 public class GameManager {
@@ -59,14 +60,14 @@ public class GameManager {
             //return false;
         }
 
-//        for (Player player : alphaTeam.getPlayers()){
-//            player.setRespawnLocation(alphaTeam.getSpawnLocation(),true);
-//            player.teleport(alphaTeam.getSpawnLocation());
-//        }
-//        for (Player player : deltaTeam.getPlayers()){
-//            player.setRespawnLocation(deltaTeam.getSpawnLocation(),true);
-//            player.teleport(deltaTeam.getSpawnLocation());
-//        }
+        for (Player player : alphaTeam.getPlayers()){
+            player.setRespawnLocation(alphaTeam.getSpawnLocation(),true);
+            player.teleport(alphaTeam.getSpawnLocation().add(0.5,0,0.5));
+        }
+        for (Player player : deltaTeam.getPlayers()){
+            player.setRespawnLocation(deltaTeam.getSpawnLocation(),true);
+            player.teleport(deltaTeam.getSpawnLocation().add(0.5,0,0.5));
+        }
 
         gameState = GameState.STARTING;
 
@@ -138,8 +139,9 @@ public class GameManager {
     }
 
     public void startGameTimer() {
-        int limit = 10;
-        count = 10;
+        // this is pretty ugly but for some forsaken reason this is the only way that works
+        int limit = CTF.configManager.getGameDuration();
+        count = CTF.configManager.getGameDuration();
         Bossbar bossbar = CTF.bossbar;
         timerTask = Bukkit.getScheduler().runTaskTimer(main, () -> {
             if (count == 0) {
@@ -152,7 +154,7 @@ public class GameManager {
                 String barMessage = "";
                 barMessage += " - Time remaining: " + String.format("%02d:%02d", (newcount % 3600) / 60, newcount % 60) + " - ";
                 if (CTF.teamManager.getAlphaTeam().isFlagTaken()) barMessage += ChatColor.BOLD.toString() + CTF.teamManager.getAlphaTeam().getTeamColor() +
-                        String.format("%s FLAG TAKEN", CTF.teamManager.getAlphaTeam().getName()).toUpperCase();
+                        String.format("%s FLAG TAKEN ", CTF.teamManager.getAlphaTeam().getName()).toUpperCase();
                 if (CTF.teamManager.getDeltaTeam().isFlagTaken()) barMessage += ChatColor.BOLD.toString() + CTF.teamManager.getDeltaTeam().getTeamColor() +
                         String.format("%s FLAG TAKEN", CTF.teamManager.getDeltaTeam().getName()).toUpperCase();
                 bossbar.updateBossbar(barMessage, (double) newcount / limit);

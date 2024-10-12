@@ -21,8 +21,9 @@ public class TeamManager {
     private final CTF main;
     public TeamManager(CTF main){
         this.main = main;
-        alphaTeam = new CtfTeam("red", Material.RED_WOOL, ChatColor.RED, Material.RED_BANNER);
-        deltaTeam = new CtfTeam("blue", Material.BLUE_WOOL, ChatColor.BLUE, Material.BLUE_BANNER);
+        CtfTeam[] teams = CTF.configManager.getTeams();
+        alphaTeam = teams[0];
+        deltaTeam = teams[1];
         alphaTeam.setEnemyTeam(deltaTeam);
         deltaTeam.setEnemyTeam(alphaTeam);
     }

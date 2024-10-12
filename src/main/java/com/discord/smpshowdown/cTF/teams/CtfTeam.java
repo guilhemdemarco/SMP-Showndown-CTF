@@ -24,9 +24,7 @@ public class CtfTeam {
     List<Player> players;
     Location spawnLocation;
 
-
-
-    public CtfTeam(String name, Material captureBlock, ChatColor teamColor, Material bannerBlock){
+    public CtfTeam(String name, Material captureBlock, ChatColor teamColor, Material bannerBlock, Location spawnLocation){
         this.name = name;
         this.captureBlock = captureBlock;
         this.teamColor = teamColor;
@@ -36,6 +34,7 @@ public class CtfTeam {
         meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
         _tempBanner.setItemMeta(meta);
         this.banner = _tempBanner;
+        this.spawnLocation = spawnLocation;
         this.isFlagTaken = false;
         this.players = new ArrayList<>();
     }

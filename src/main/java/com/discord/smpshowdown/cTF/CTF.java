@@ -1,5 +1,6 @@
 package com.discord.smpshowdown.cTF;
 
+import com.discord.smpshowdown.cTF.config.ConfigManager;
 import com.discord.smpshowdown.cTF.listeners.PlayerEvents;
 import com.discord.smpshowdown.cTF.players.PlayerData;
 import com.discord.smpshowdown.cTF.teams.CtfTeam;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 public final class CTF extends JavaPlugin {
 
+    public static ConfigManager configManager;
     public static HashMap<UUID, PlayerData> playerData = new HashMap<UUID, PlayerData>();
     public static TeamManager teamManager;
     public static GameManager gameManager;
@@ -31,10 +33,13 @@ public final class CTF extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
+        configManager = new ConfigManager(this);
         teamManager = new TeamManager(this);
         teamManager.createTeamsOnStartup();
         gameManager = new GameManager(this);
         bossbar = new Bossbar(this);
+
+        this.saveDefaultConfig();
 
 
         //DEBUG: this is for when we reload the plugin, the playerdata hashmap gets reset
